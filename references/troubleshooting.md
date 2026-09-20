@@ -34,6 +34,7 @@ All of these fail silently — no exception, no log line. This is the cost of a 
 | Block setting vanishes after save | Invented property outside `customFields` |
 | Twig: "Impossible to access an attribute on a null variable" | Resolver never called `setData`, or not tagged with `shopware.cms.data_resolver` |
 | Wrong-language text | Reading `element.config` instead of `element.translated.config` |
+| New config key empty on existing layouts only | `defaultConfig` runs at slot creation only — add the same default to the Twig/SCSS fallback, or re-save each layout |
 | Grid broken | Block template emits its own `.row` |
 | Override has no effect | Path differs from original, or cache not cleared |
 | Fix disappears after `composer install` | Change was made in `vendor/` |
