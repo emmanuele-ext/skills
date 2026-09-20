@@ -1,15 +1,21 @@
 ---
 name: shopware-cms-elements
-description: "Trigger: Shopware CMS element, CMS block, registerCmsElement, registerCmsBlock, sw-cms-el, cms-element twig, Shopware resolver, sw_extends, Shopping Experiences. Write and modify custom Shopware 6 CMS elements/blocks correctly on the first try."
+description: "Trigger: any Shopware 6 storefront or administration customization. CMS element or block (registerCmsElement, registerCmsBlock, sw-cms-el, cms-element twig, Shopping Experiences, cms data resolver); child-theme SCSS override; Twig override via sw_extends; Shopware Component.override; theme.json setting; custom plugin under custom/plugins/; or the rebuild after one (build-administration, build-storefront, theme:compile, cache:clear). Pick the narrowest override rung, never touch vendor/, and catch the silent failures on the first try."
 license: Apache-2.0
 metadata:
   author: emmanuele
-  version: "1.0"
+  version: "1.1"
 ---
 
 ## Activation Contract
 
-Activate when writing, registering, or debugging a Shopware 6 CMS element or block (administration Vue component, storefront Twig template, PHP resolver), or when extending an existing core/theme CMS component.
+Activate on any Shopware 6 work whose output is storefront markup, storefront styling, or administration UI:
+
+- writing, registering, or debugging a CMS element or block (administration Vue component, storefront Twig template, PHP data resolver);
+- changing an existing core or parent-theme component from a child theme or plugin — SCSS, `sw_extends` Twig override, `Shopware.Component.override`, `theme.json`;
+- choosing which build or cache command a change needs, or diagnosing a change that appeared to do nothing.
+
+Do not activate for Shopware work that produces no storefront or administration output: Composer and plugin lifecycle on their own, database or migration work, API, import, or integration code.
 
 ## Hard Rules
 

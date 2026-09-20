@@ -1,6 +1,6 @@
 # shopware-cms-elements
 
-Claude Code skill for writing and modifying custom Shopware 6 CMS elements and blocks correctly on the first try — naming contract, element/block decision gates, override ladder for existing components, and a silent-failure troubleshooting table.
+Claude Code skill for customizing a Shopware 6 storefront or administration correctly on the first try — CMS element and block naming contract, element/block decision gates, a six-rung override ladder for existing core and parent-theme components (SCSS, `sw_extends`, `Component.override`, `theme.json`), build commands per file type, and a silent-failure troubleshooting table.
 
 ## Install
 
