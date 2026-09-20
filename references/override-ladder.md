@@ -29,6 +29,10 @@ Hook the innermost block that contains the change; use `{{ parent() }}` wherever
 grep -n "{% block" vendor/shopware/storefront/Resources/views/storefront/element/cms-element-image.html.twig
 ```
 
+**To suppress something the parent renders conditionally, override the block it already wraps that thing in and skip `parent()`** — never copy the parent's decision logic into your own template. The parent only reaches the block once it has decided to render, so a `{% if not <my condition> %}{{ parent() }}{% endif %}` is the whole change, and none of the parent's other reasoning is duplicated into a file that will drift on the next update.
+
+**Never rely on a parent-theme condition you have not seen fire.** Read the whole chain of variables that feeds it, not the one line that mentions your case: a check that reads like a general rule ("the first section has a background colour") is often just a fallback *inside* a feature gate that is off by default, so satisfying it changes nothing. Confirm in the rendered DOM before designing around it.
+
 ## 3. Editor UI → `Component.override`
 
 ```js

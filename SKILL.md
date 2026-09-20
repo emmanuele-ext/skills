@@ -4,7 +4,7 @@ description: "Trigger: any Shopware 6 storefront or administration customization
 license: Apache-2.0
 metadata:
   author: emmanuele
-  version: "1.1"
+  version: "1.2"
 ---
 
 ## Activation Contract
@@ -27,6 +27,7 @@ Do not activate for Shopware work that produces no storefront or administration 
 - `previewComponent` is mandatory on `registerCmsElement` — without it the element never appears in the picker, no error.
 - `initElementConfig('<name>')` must run in `created()` in **both** the config and component Vue files (two separate instances). Keep `defaultConfig` in one `config.constant.js` imported by both — never duplicate it.
 - Every field mutation must `$emit('element-update', this.element)`, wired via `@update:model-value="emitUpdate"` on each field — otherwise the save button never activates.
+- **`mt-number-field` cannot express "unset"**: clearing it writes `0`, not `null` or `''`. So a config key whose empty value means "inherit the theme token" (a radius, a spacing, a limit) is unreachable through a number field — the moment the editor touches it, `0` is saved and silently wins over the token, and the field never shows what it would have inherited. Model that key as an `mt-select` whose FIRST option is the inherit option. Use `''` as its value, not `null`: `''` already reads as unset to the usual guards (`is not null and is not same as('')` in Twig, `!== null && !== ''` in the canvas), so the style bridge needs no change, while `null` also fails to match any option and renders the select blank. Keep the numeric options typed as numbers so values already saved as numbers still match, and normalise a legacy `null` to `''` right after `initElementConfig` for the same reason.
 - Storefront templates read `element.translated.config` (never `element.config`) and loaded entities from `element.data`. Wrap every `{% block %}` around a logically overridable chunk. Never emit `<a href="">` or `<img src="">` for empty optional fields. Use `sw_thumbnails`, never raw `<img>`.
 - **Blocks have a fixed DB column set** (`marginTop/Bottom/Left/Right`, `cssClass`, `backgroundColor`, `backgroundMediaId`, `sizingMode`) plus `customFields` (JSON). Any other invented key in a block's `defaultConfig` is silently discarded on save. Elements have no such limit.
 - If a setting concerns a single slot, it belongs on the element's config, never on the block.
