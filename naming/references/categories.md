@@ -47,7 +47,7 @@
 ## git
 
 - Branch: `<type>/<short-kebab-description>` following the repo's flow (`feature/`, `fix/`, `hotfix/`, `release/`). Describe the change, not the person or ticket alone (`feature/filtro-categoria`; add the ticket ID if the team uses one).
-- Commit subject: the format comes from CLAUDE.md/AGENTS.md (prefix, emoji, type, language, length). This skill adds only:
+- Commit subject: the format comes from the agent's instruction files and the repo's conventions (prefix, emoji, type, language, length). This skill adds only:
   - Imperative, describes the effect: `fix: allinea prezzo barrato al prezzo` beats `fix: css`.
   - Understandable without reading the diff.
   - One logical change per subject; if it needs "and", split the commit.

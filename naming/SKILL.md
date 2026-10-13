@@ -21,7 +21,7 @@ Load when choosing, reviewing, or renaming any identifier or label: code symbols
 - Functions start with a verb; values and types are nouns.
 - Length scales with scope: short in a 3-line loop, fully descriptive when exported or global.
 - User-facing names (features, CMS blocks, products) use the user's words and state the outcome, not the mechanism.
-- Commit messages: the global commit rules in CLAUDE.md and the project's AGENTS.md win over this skill; apply only the clarity rules here.
+- Commit messages: the agent's instruction files (global and project, e.g. AGENTS.md, CONTRIBUTING) win over this skill; apply only the clarity rules here.
 - Never rename public APIs, tokens, or DB fields without flagging every consumer that breaks.
 
 ## Decision Gates
@@ -51,3 +51,4 @@ Return the recommended name first, then one line of reasoning. Alternatives, if 
 ## References
 
 - `references/categories.md` — per-category rules, patterns, and good/bad examples.
+- `references/rationale.md` — why each principle exists and what breaks without it; read it to justify a choice or decide an uncovered edge case.
