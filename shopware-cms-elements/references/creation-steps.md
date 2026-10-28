@@ -11,12 +11,12 @@
 Format `<vendor>-<description>`, lowercase, hyphenated, e.g. `acme-hero-card`. It derives:
 
 ```
-acme-hero-card                          → registerCmsElement({ name })
-sw-cms-el-acme-hero-card                → canvas component
-sw-cms-el-config-acme-hero-card         → config component
-sw-cms-el-preview-acme-hero-card        → preview component
-cms-element-acme-hero-card.html.twig    → storefront template
-'acme-hero-card'                        → resolver getType()
+acme-hero-card                          → registerCmsElement({ name })          (bound)
+cms-element-acme-hero-card.html.twig    → storefront template                   (bound)
+'acme-hero-card'                        → resolver getType()                    (bound)
+sw-cms-el-acme-hero-card                → canvas component                      (convention)
+sw-cms-el-config-acme-hero-card         → config component                      (convention)
+sw-cms-el-preview-acme-hero-card        → preview component                     (convention)
 ```
 
 ## 3. Folder skeleton
@@ -50,7 +50,7 @@ export const ACME_HERO_CARD_DEFAULT_CONFIG = {
 ## 5. Three Vue components
 
 - **preview**: static markup only, no logic, no data.
-- **config**: `mixins: [Shopware.Mixin.getByName('cms-element')]`, `initElementConfig('acme-hero-card')` in `created()`, one `mt-*` field per config entry, each with `@update:model-value="emitUpdate"`.
+- **config**: `mixins: [Shopware.Mixin.getByName('cms-element')]`, `emits: ['element-update']`, `initElementConfig()` in `created()`, one `mt-*` field per config entry, each with `@update:model-value="emitUpdate"`, and an own `emitUpdate()` method that emits `element-update` (the mixin does not provide it).
 - **component**: same mixin and `initElementConfig` call, markup that resembles the storefront output — never business logic, never a second implementation to keep in sync.
 
 ## 6. `index.js` + registration
@@ -79,7 +79,7 @@ Then import it from `Resources/app/administration/src/main.js` — without this 
 
 ## 8. Resolver (only if config holds entity ids)
 
-Implement `AbstractCmsElementResolver`: `getType()` returns the exact element name; `collect()` returns `Criteria` objects (batched across the whole page, don't query manually); `enrich()` always calls `$slot->setData($struct)` before any return, even with an empty struct. Register with tag `shopware.cms.data_resolver` in `services.xml` — untagged resolvers are silently never called.
+Implement `AbstractCmsElementResolver`: `getType()` returns the exact element name; `collect()` returns a `?CriteriaCollection` (batched across the whole page, don't query manually); `enrich()` always calls `$slot->setData($struct)` before any return, even with an empty struct. Register with tag `shopware.cms.data_resolver` in `services.xml` (or `services.php`) — untagged resolvers are silently never called.
 
 ## 9. Translations
 
@@ -98,7 +98,7 @@ Then run the checklist in `troubleshooting.md`.
 
 Blocks follow the same naming discipline via `registerCmsBlock`, but:
 
-- `category` must be one of: `text`, `image`, `text-image`, `commerce`, `sidebar`, `video`, `form`, `html`.
+- `category` is free-form. The built-in ones are `text`, `image`, `video`, `text-image`, `commerce`, `sidebar`, `form`, `html` (plus `app`). Any other value creates a new tab in the block sidebar, labelled by the snippet key `apps.sw-cms.detail.label.blockCategory.<category>` — add that snippet, or the tab shows the raw key. Prefer a built-in category unless the blocks genuinely need their own tab.
 - `slots` declares the element `type` occupying each slot, optionally with `default: { config, data }` using `source: 'default'` + `Shopware.Constants.CMS.MEDIA.*` placeholders.
 - The storefront block template emits only `col-*` wrappers (never its own `.row`) and includes the slot's element dynamically: `{% sw_include '@Storefront/storefront/element/cms-element-' ~ element.type ~ '.html.twig' ignore missing %}`. Always add `data-cms-element-id="{{ element.id }}"`.
 - Any block setting outside the fixed DB columns must go in `customFields` (see SKILL.md Hard Rules), never invented as a top-level `defaultConfig` key.

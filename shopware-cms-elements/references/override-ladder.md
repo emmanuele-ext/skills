@@ -38,13 +38,19 @@ grep -n "{% block" vendor/shopware/storefront/Resources/views/storefront/element
 ```js
 Shopware.Component.override('sw-cms-block-layout-config', {
     template: `
-        {% block sw_cms_block_config_content %}
+        {% block sw_cms_block_layout_config_css_class %}
             {% parent %}
             <mt-text-field v-if="block.type === 'acme-hero-grid' && block.customFields"
                            v-model="block.customFields.cardPadding" />
         {% endblock %}
     `,
 });
+```
+
+Override only a block name that exists in the original template — an unknown name is silently ignored. List them with:
+
+```bash
+grep -o "{% block [a-z_]*" vendor/shopware/administration/Resources/app/administration/src/module/sw-cms/component/sw-cms-block/sw-cms-block-layout-config/sw-cms-block-layout-config.html.twig
 ```
 
 `{% parent %}` first, always — otherwise the original block content is lost. Always guard added content with `block.type`/`element.type`, or the change applies to every layout in the shop.
@@ -60,4 +66,4 @@ Register a brand-new element with its own name instead. Overriding `sw-cms-el-co
 
 ## 6. Site-wide, client-editable setting → theme panel
 
-Add a field to `theme.json`; it becomes a same-named Sass variable usable across storefront SCSS. Requires `bin/console theme:refresh` + recompile.
+Add a field to `theme.json`; every field with a `type` becomes a same-named Sass variable (`$<key>`) usable across storefront SCSS, unless it sets `"scss": false`. Requires `bin/console theme:refresh` + `theme:compile`.
